@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Abril+Fatface&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -29,18 +33,33 @@
             <div class="gradient-orb orb-1"></div>
             <div class="gradient-orb orb-2"></div>
             <div class="gradient-orb orb-3"></div>
+            <canvas id="particleCanvas" class="particle-canvas"></canvas>
         </div>
         <div class="container">
             <div class="hero-content">
                 <h1 class="hero-title">
                     <span class="title-line">Instaprop AI</span>
                 </h1>
-                <p class="hero-tagline">Buy & Sell Real Estate Instantly</p>
+                <p class="hero-tagline" id="typewriter">Buy & Sell Real Estate Instantly</p>
                 <p class="hero-subtitle">The fastest, smartest way to find property, powered by AI.</p>
                 <p class="hero-subtitle" style="margin-top: 0.5rem; font-size: clamp(1rem, 2vw, 1.25rem);">Buy globally. Sell in 24 hours. No middlemen.</p>
+                <div class="hero-stats fade-in" data-aos="fade-up" data-aos-delay="400">
+                    <div class="hero-stat-item">
+                        <div class="hero-stat-number" data-target="24">0</div>
+                        <div class="hero-stat-label">Hour Transactions</div>
+                    </div>
+                    <div class="hero-stat-item">
+                        <div class="hero-stat-number" data-target="1.2">0</div>
+                        <div class="hero-stat-label">Trillion Market</div>
+                    </div>
+                    <div class="hero-stat-item">
+                        <div class="hero-stat-number" data-target="95">0</div>
+                        <div class="hero-stat-label">% Undigitized</div>
+                    </div>
+                </div>
                 <div class="hero-buttons">
-                    <a href="#features" class="btn btn-primary">Explore Features</a>
-                    <a href="#cta" class="btn btn-secondary">Get Started</a>
+                    <a href="#features" class="btn btn-primary magnetic-btn">Explore Features</a>
+                    <a href="#cta" class="btn btn-secondary magnetic-btn">Get Started</a>
                 </div>
             </div>
         </div>
@@ -61,59 +80,104 @@
                 <p class="section-subtitle">9 powerful features that transform real estate transactions</p>
             </div>
             <div class="features-grid">
-                <div class="feature-card fade-in">
+                <div class="feature-card fade-in feature-card-animated" data-aos="zoom-in" data-aos-delay="100" data-feature="1">
+                    <div class="feature-glow"></div>
                     <div class="feature-number">01</div>
-                    <div class="feature-icon">📸</div>
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-bg"></div>
+                        <div class="feature-icon"><i class="fas fa-camera"></i></div>
+                    </div>
                     <h3>AI Payment Scanner</h3>
                     <p>Scan any payment plan with your phone camera. Our AI automatically extracts payment schedules, creates reminders, tracks deadlines, and sends smart alerts so you never miss a payment.</p>
+                    <div class="feature-shine"></div>
                 </div>
-                <div class="feature-card fade-in">
+                <div class="feature-card fade-in feature-card-animated" data-aos="zoom-in" data-aos-delay="200" data-feature="2">
+                    <div class="feature-glow"></div>
                     <div class="feature-number">02</div>
-                    <div class="feature-icon">🤖</div>
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-bg"></div>
+                        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                    </div>
                     <h3>AI Property Assistant</h3>
                     <p>Get personalized property recommendations based on your preferences, budget, and location. Our AI assistant compares deals, guides your decisions, and helps you find the perfect property without any middlemen.</p>
+                    <div class="feature-shine"></div>
                 </div>
-                <div class="feature-card fade-in">
+                <div class="feature-card fade-in feature-card-animated" data-aos="zoom-in" data-aos-delay="300" data-feature="3">
+                    <div class="feature-glow"></div>
                     <div class="feature-number">03</div>
-                    <div class="feature-icon">💎</div>
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-bg"></div>
+                        <div class="feature-icon"><i class="fas fa-gem"></i></div>
+                    </div>
                     <h3>AI Market Valuation</h3>
                     <p>See the true market price instantly. Our AI-powered valuation engine analyzes real-time market data, comparable properties, and trends to give you accurate pricing—not developer assumptions.</p>
+                    <div class="feature-shine"></div>
                 </div>
-                <div class="feature-card fade-in">
+                <div class="feature-card fade-in feature-card-animated" data-aos="zoom-in" data-aos-delay="400" data-feature="4">
+                    <div class="feature-glow"></div>
                     <div class="feature-number">04</div>
-                    <div class="feature-icon">⚡</div>
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-bg"></div>
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    </div>
                     <h3>24-Hour Instant Auctions</h3>
                     <p>Buy or sell property in under one day. List, bid, buy, or sell through our instant auction system with full transparency. No waiting weeks or months—transactions happen in 24 hours.</p>
+                    <div class="feature-shine"></div>
                 </div>
-                <div class="feature-card fade-in">
+                <div class="feature-card fade-in feature-card-animated" data-aos="zoom-in" data-aos-delay="500" data-feature="5">
+                    <div class="feature-glow"></div>
                     <div class="feature-number">05</div>
-                    <div class="feature-icon">🏢</div>
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-bg"></div>
+                        <div class="feature-icon"><i class="fas fa-building"></i></div>
+                    </div>
                     <h3>Direct Developer Contact</h3>
                     <p>Contact verified developers directly through our platform. No brokers, no middlemen, no hidden fees. Instant communication with developers who are ready to work with you.</p>
+                    <div class="feature-shine"></div>
                 </div>
-                <div class="feature-card fade-in">
+                <div class="feature-card fade-in feature-card-animated" data-aos="zoom-in" data-aos-delay="600" data-feature="6">
+                    <div class="feature-glow"></div>
                     <div class="feature-number">06</div>
-                    <div class="feature-icon">✅</div>
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-bg"></div>
+                        <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+                    </div>
                     <h3>KYC + E-Contracts</h3>
                     <p>Fully digital, secure transactions from start to finish. Complete KYC verification and sign legally binding e-contracts from home. Everything is verified, encrypted, and compliant.</p>
+                    <div class="feature-shine"></div>
                 </div>
-                <div class="feature-card fade-in">
+                <div class="feature-card fade-in feature-card-animated" data-aos="zoom-in" data-aos-delay="700" data-feature="7">
+                    <div class="feature-glow"></div>
                     <div class="feature-number">07</div>
-                    <div class="feature-icon">📊</div>
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-bg"></div>
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    </div>
                     <h3>Portfolio Tracking</h3>
                     <p>Monitor all your properties in one comprehensive dashboard. Track performance, value changes, risks, payment schedules, and property data in real-time. Get insights that help you make better decisions.</p>
+                    <div class="feature-shine"></div>
                 </div>
-                <div class="feature-card fade-in">
+                <div class="feature-card fade-in feature-card-animated" data-aos="zoom-in" data-aos-delay="800" data-feature="8">
+                    <div class="feature-glow"></div>
                     <div class="feature-number">08</div>
-                    <div class="feature-icon">🛡️</div>
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-bg"></div>
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    </div>
                     <h3>Fraud Detection</h3>
                     <p>AI-powered fraud detection identifies fake listings, suspicious users, and price manipulation. Our system continuously monitors and protects you from scams, ensuring every transaction is safe.</p>
+                    <div class="feature-shine"></div>
                 </div>
-                <div class="feature-card fade-in">
+                <div class="feature-card fade-in feature-card-animated" data-aos="zoom-in" data-aos-delay="900" data-feature="9">
+                    <div class="feature-glow"></div>
                     <div class="feature-number">09</div>
-                    <div class="feature-icon">🔮</div>
+                    <div class="feature-icon-wrapper">
+                        <div class="feature-icon-bg"></div>
+                        <div class="feature-icon"><i class="fas fa-magic"></i></div>
+                    </div>
                     <h3>Project Delay Predictor</h3>
                     <p>Predict construction delays using AI analysis of historical and current project data. Know potential risks before you invest, helping you make informed decisions and avoid costly delays.</p>
+                    <div class="feature-shine"></div>
                 </div>
             </div>
         </div>
@@ -156,6 +220,38 @@
         </div>
     </section>
 
+    <!-- Charts Section -->
+    <section id="charts" class="section charts-section">
+        <div class="charts-background">
+            <div class="gradient-orb orb-chart-1"></div>
+            <div class="gradient-orb orb-chart-2"></div>
+        </div>
+        <div class="container">
+            <div class="section-header fade-in slide-in-down" data-aos="fade-up">
+                <h2 class="section-title">Market Insights</h2>
+                <p class="section-subtitle">Data-driven insights into the real estate market opportunity</p>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-card fade-in" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="chart-title">Market Growth</h3>
+                    <canvas id="marketGrowthChart"></canvas>
+                </div>
+                <div class="chart-card fade-in" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="chart-title">Digitization Opportunity</h3>
+                    <canvas id="digitizationChart"></canvas>
+                </div>
+                <div class="chart-card fade-in" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="chart-title">Feature Adoption</h3>
+                    <canvas id="featureAdoptionChart"></canvas>
+                </div>
+                <div class="chart-card fade-in" data-aos="fade-up" data-aos-delay="400">
+                    <h3 class="chart-title">Revenue Projection</h3>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Team Section -->
     <section id="team" class="section team-section">
         <div class="team-background">
@@ -168,21 +264,116 @@
                 <p class="section-subtitle">Experienced real estate operators and AI engineers building the future of property transactions.</p>
             </div>
             <div class="team-grid">
-                <div class="team-card fade-in">
-                    <div class="team-avatar">WS</div>
+                <div class="team-card fade-in" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="team-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
                     <h3>Walid Salah</h3>
                     <p class="team-role">Chief Executive Officer</p>
-                    <p>9+ years of global real estate experience. Specializes in business development, and investor relations. Brings deep industry knowledge and strategic vision to transform real estate transactions.</p>
+                    <div class="team-education">
+                        <p><strong>Education:</strong></p>
+                        <p>BA in Computer Science & Applied Math/Stats – SUNY Stony Brook</p>
+                        <p>MA in Global Affairs & Public Policy – AUC</p>
+                        <p><em>Thesis: Stakeholder management in Siemens power plants (Egypt)</em></p>
+                    </div>
+                    <div class="team-experience">
+                        <p><strong>Experience:</strong></p>
+                        <p>Management Consultant, AECOM/AGS – change, leadership, process control</p>
+                        <p>Regional Manager, Qatari Diar – Quality Management</p>
+                        <p>9+ years of global real estate experience with deep industry knowledge and strategic vision to transform real estate transactions.</p>
+                    </div>
+                    <div class="team-social">
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
                 </div>
-                <div class="team-card fade-in">
-                    <div class="team-avatar">AA</div>
+                <div class="team-card fade-in" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="team-avatar">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
                     <h3>Abraam Adel</h3>
                     <p class="team-role">Chief Technology Officer</p>
-                    <p>Leads product vision, system architecture, AI automation, and platform reliability. Expert in product development, building automation systems that make real estate transactions instant and transparent.</p>
+                    <div class="team-education">
+                        <p><strong>Education:</strong></p>
+                        <p>BSc in Computer Science – ASU, Top University in Egypt</p>
+                        <p>ECPC Contestant, competing at the highest level in algorithmic programming</p>
+                    </div>
+                    <div class="team-experience">
+                        <p><strong>Experience:</strong></p>
+                        <p>System Architect & Engineer – designed and delivered scalable, robust software systems</p>
+                        <p>Built Web Banking App with real-time updates, Firebase authentication, and advanced notifications</p>
+                        <p>Developed Digital Wallet, demonstrating full-stack mastery</p>
+                        <p>Founder & Operator of e-commerce agency with AI-driven order management</p>
+                    </div>
+                    <div class="team-social">
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
                 </div>
             </div>
             <div class="team-support fade-in">
                 <p>Supported by external designers, legal consultants, and AI model advisors who bring specialized expertise to ensure platform excellence.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section testimonials-section">
+        <div class="testimonials-background">
+            <div class="gradient-orb orb-test-1"></div>
+            <div class="gradient-orb orb-test-2"></div>
+        </div>
+        <div class="container">
+            <div class="section-header fade-in slide-in-down" data-aos="fade-up">
+                <h2 class="section-title">What Our Users Say</h2>
+                <p class="section-subtitle">Real feedback from property buyers and sellers using Instaprop AI</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in" data-aos="fade-up" data-aos-delay="100">
+                    <div class="testimonial-quote">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="testimonial-text">Instaprop AI transformed how I buy property. The AI valuation saved me from overpaying, and I closed a deal in just 24 hours!</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="testimonial-info">
+                            <h4>Ahmed Hassan</h4>
+                            <p>Property Investor</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in" data-aos="fade-up" data-aos-delay="200">
+                    <div class="testimonial-quote">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="testimonial-text">As a developer, the direct contact feature eliminated all the broker fees. Transactions are faster and more transparent than ever.</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="testimonial-info">
+                            <h4>Sarah Al-Mansouri</h4>
+                            <p>Real Estate Developer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in" data-aos="fade-up" data-aos-delay="300">
+                    <div class="testimonial-quote">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="testimonial-text">The portfolio tracking dashboard is incredible. I can monitor all my properties in one place and never miss a payment deadline.</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="testimonial-info">
+                            <h4>Mohammed Ali</h4>
+                            <p>Property Portfolio Manager</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -241,7 +432,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Instaprop AI. All rights reserved.</p>
+                <p>&copy; 2026 Instaprop AI. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -253,6 +444,13 @@
         </svg>
     </button>
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- GSAP for Advanced Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

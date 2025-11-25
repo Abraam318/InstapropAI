@@ -106,10 +106,10 @@ const observerOptions = {
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            // Add visible class with a small delay for smoother animation
-            setTimeout(() => {
-                entry.target.classList.add('visible');
-            }, 50);
+            // Add visible class immediately
+            entry.target.classList.add('visible');
+            // Stop observing once visible
+            observer.unobserve(entry.target);
         }
     });
 }, observerOptions);
@@ -120,10 +120,19 @@ const animatedElements = document.querySelectorAll(
 );
 
 animatedElements.forEach((el, index) => {
-    // Add stagger delay based on element position
-    const delay = (index % 6) * 50; // Stagger every 6 elements
-    el.style.transitionDelay = `${delay}ms`;
-    observer.observe(el);
+    // Check if element is already in viewport
+    const rect = el.getBoundingClientRect();
+    const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+    
+    if (isVisible) {
+        // If already visible, show immediately with slight delay
+        setTimeout(() => {
+            el.classList.add('visible');
+        }, index * 50);
+    } else {
+        // Otherwise observe for when it comes into view
+        observer.observe(el);
+    }
 });
 
 // Special observer for feature cards with enhanced stagger
@@ -405,7 +414,7 @@ document.addEventListener('keydown', (e) => {
 // Console Welcome Message
 // ============================================
 
-console.log('%cInstaprop AI', 'font-size: 24px; font-weight: bold; color: #3a6ad6;');
+console.log('%cInstaprop AI', 'font-size: 24px; font-weight: bold; color: #10b981;');
 console.log('%cInstant. Intelligent. Transparent.', 'font-size: 14px; color: #6b7280;');
 console.log('%cBuilding the future of real estate.', 'font-size: 12px; color: #9ca3af;');
 
@@ -436,6 +445,12 @@ window.addEventListener('scroll', throttledParallax, { passive: true });
 // Initialize on DOM Load
 // ============================================
 
+// Wait for all libraries to load
+window.addEventListener('load', () => {
+    // Initialize everything after page fully loads
+    initializeAll();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     // Ensure all animations are ready
     setTimeout(() => {
@@ -456,5 +471,644 @@ document.addEventListener('DOMContentLoaded', () => {
             el.style.transform = 'translateY(0)';
         }, index * 200);
     });
+    
+    // Try to initialize immediately, but also wait for load
+    setTimeout(() => {
+        initializeAll();
+    }, 500);
 });
+
+function initializeAll() {
+    // Initialize AOS
+    if (typeof AOS !== 'undefined') {
+        try {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true,
+                offset: 100,
+                delay: 0
+            });
+            console.log('AOS initialized');
+        } catch (e) {
+            console.error('AOS initialization error:', e);
+        }
+    } else {
+        console.warn('AOS not loaded');
+    }
+    
+    // Initialize Charts - wait for Chart.js
+    if (typeof Chart !== 'undefined') {
+        try {
+            initializeCharts();
+            console.log('Charts initialized');
+        } catch (e) {
+            console.error('Chart initialization error:', e);
+        }
+    } else {
+        // Retry after a delay if Chart.js hasn't loaded
+        setTimeout(() => {
+            if (typeof Chart !== 'undefined') {
+                initializeCharts();
+            } else {
+                console.warn('Chart.js not loaded');
+            }
+        }, 1000);
+    }
+    
+    // Initialize Typewriter Effect
+    try {
+        initializeTypewriter();
+    } catch (e) {
+        console.error('Typewriter error:', e);
+    }
+    
+    // Initialize Animated Counters - check if already visible
+    try {
+        initializeCounters();
+        // Also trigger immediately if elements are visible (hero stats are always visible)
+        const counters = document.querySelectorAll('.hero-stat-number');
+        counters.forEach(counter => {
+            // Hero stats are always visible, so animate immediately
+            if (!counter.classList.contains('counted')) {
+                setTimeout(() => {
+                    counter.classList.add('counted');
+                    animateCounter(counter);
+                }, 500);
+            }
+        });
+    } catch (e) {
+        console.error('Counter error:', e);
+    }
+    
+    // Initialize Magnetic Buttons
+    try {
+        initializeMagneticButtons();
+    } catch (e) {
+        console.error('Magnetic buttons error:', e);
+    }
+    
+    // Initialize GSAP Animations
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        try {
+            gsap.registerPlugin(ScrollTrigger);
+            initializeGSAPAnimations();
+            console.log('GSAP initialized');
+        } catch (e) {
+            console.error('GSAP initialization error:', e);
+        }
+    } else {
+        console.warn('GSAP not loaded');
+    }
+    
+    // Initialize Particle Effect
+    try {
+        initializeParticles();
+    } catch (e) {
+        console.error('Particle error:', e);
+    }
+}
+
+// ============================================
+// Chart Initialization
+// ============================================
+
+function initializeCharts() {
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not loaded');
+        return;
+    }
+    
+    // Market Growth Chart
+    const marketGrowthCtx = document.getElementById('marketGrowthChart');
+    if (marketGrowthCtx && !marketGrowthCtx.chart) {
+        try {
+            marketGrowthCtx.chart = new Chart(marketGrowthCtx, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026'],
+                datasets: [{
+                    label: 'MENA Real Estate Market (Trillions USD)',
+                    data: [0.95, 1.0, 1.05, 1.1, 1.2, 1.35, 1.5],
+                    borderColor: 'rgb(16, 185, 129)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: { size: 14, weight: 'bold' },
+                        bodyFont: { size: 13 },
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.parsed.y.toFixed(2) + 'T';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 0.8,
+                        max: 1.6,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toFixed(1) + 'T';
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(16, 185, 129, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                }
+            }
+            });
+        } catch (e) {
+            console.error('Market Growth Chart error:', e);
+        }
+    }
+    
+    // Digitization Chart
+    const digitizationCtx = document.getElementById('digitizationChart');
+    if (digitizationCtx && !digitizationCtx.chart) {
+        try {
+            digitizationCtx.chart = new Chart(digitizationCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Digitized', 'Undigitized'],
+                datasets: [{
+                    data: [5, 95],
+                    backgroundColor: [
+                        'rgb(16, 185, 129)',
+                        'rgba(16, 185, 129, 0.2)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: { size: 12, weight: '500' },
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                return label + ': ' + value + '%';
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    animateRotate: true,
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                }
+            }
+            });
+        } catch (e) {
+            console.error('Digitization Chart error:', e);
+        }
+    }
+    
+    // Feature Adoption Chart
+    const featureAdoptionCtx = document.getElementById('featureAdoptionChart');
+    if (featureAdoptionCtx && !featureAdoptionCtx.chart) {
+        try {
+            featureAdoptionCtx.chart = new Chart(featureAdoptionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['AI Scanner', 'AI Assistant', 'Market Valuation', '24H Auctions', 'Portfolio Tracking', 'Fraud Detection'],
+                datasets: [{
+                    label: 'User Adoption Rate (%)',
+                    data: [72, 68, 85, 58, 79, 64],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.9)',
+                        'rgba(52, 211, 153, 0.9)',
+                        'rgba(34, 197, 94, 0.9)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(52, 211, 153, 0.8)',
+                        'rgba(34, 197, 94, 0.8)'
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.x + '% adoption rate';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            },
+                            color: '#64748b'
+                        },
+                        grid: {
+                            color: 'rgba(16, 185, 129, 0.1)'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#64748b'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                }
+            }
+            });
+        } catch (e) {
+            console.error('Feature Adoption Chart error:', e);
+        }
+    }
+    
+    // Revenue Projection Chart
+    const revenueCtx = document.getElementById('revenueChart');
+    if (revenueCtx && !revenueCtx.chart) {
+        try {
+            revenueCtx.chart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['Q1 2026', 'Q2 2026', 'Q3 2026', 'Q4 2026', 'Q1 2027', 'Q2 2027', 'Q3 2027'],
+                datasets: [{
+                    label: 'Projected Revenue (Millions USD)',
+                    data: [0.2, 0.8, 2.5, 5.2, 9.5, 16.0, 25.0],
+                    borderColor: 'rgb(52, 211, 153)',
+                    backgroundColor: 'rgba(52, 211, 153, 0.15)',
+                    tension: 0.5,
+                    fill: true,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: 'rgb(16, 185, 129)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.parsed.y.toFixed(1) + 'M revenue';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 30,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'M';
+                            },
+                            color: '#64748b'
+                        },
+                        grid: {
+                            color: 'rgba(52, 211, 153, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#64748b',
+                            maxRotation: 45,
+                            minRotation: 45
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                }
+            }
+            });
+        } catch (e) {
+            console.error('Revenue Chart error:', e);
+        }
+    }
+}
+
+// ============================================
+// Typewriter Effect
+// ============================================
+
+function initializeTypewriter() {
+    const typewriterElement = document.getElementById('typewriter');
+    if (!typewriterElement) return;
+    
+    // Don't clear if already has content
+    if (typewriterElement.dataset.initialized) return;
+    typewriterElement.dataset.initialized = 'true';
+    
+    const originalText = typewriterElement.textContent.trim() || 'Buy & Sell Real Estate Instantly';
+    typewriterElement.textContent = '';
+    typewriterElement.style.opacity = '1';
+    let index = 0;
+    
+    function type() {
+        if (index < originalText.length) {
+            typewriterElement.textContent += originalText.charAt(index);
+            index++;
+            setTimeout(type, 80);
+        }
+    }
+    
+    // Start typing after a delay
+    setTimeout(type, 500);
+}
+
+// ============================================
+// Animated Counters
+// ============================================
+
+function initializeCounters() {
+    const counters = document.querySelectorAll('.hero-stat-number');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                entry.target.classList.add('counted');
+                animateCounter(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    counters.forEach(counter => {
+        observer.observe(counter);
+        // Also check if already visible
+        const rect = counter.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            if (!counter.classList.contains('counted')) {
+                counter.classList.add('counted');
+                animateCounter(counter);
+            }
+        }
+    });
+}
+
+function animateCounter(element) {
+    const target = parseFloat(element.getAttribute('data-target'));
+    const duration = 2000;
+    const increment = target / (duration / 16);
+    let current = 0;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.textContent = target % 1 === 0 ? target : target.toFixed(1);
+            clearInterval(timer);
+        } else {
+            element.textContent = current % 1 === 0 ? Math.floor(current) : current.toFixed(1);
+        }
+    }, 16);
+}
+
+// ============================================
+// Magnetic Buttons
+// ============================================
+
+function initializeMagneticButtons() {
+    const magneticButtons = document.querySelectorAll('.magnetic-btn');
+    
+    magneticButtons.forEach(button => {
+        button.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            const moveX = x * 0.15;
+            const moveY = y * 0.15;
+            
+            this.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translate(0, 0)';
+        });
+    });
+}
+
+// ============================================
+// GSAP Animations
+// ============================================
+
+function initializeGSAPAnimations() {
+    try {
+        // Animate gradient orbs
+        const orbs = document.querySelectorAll('.gradient-orb');
+        if (orbs.length > 0) {
+            gsap.to('.gradient-orb', {
+                y: '+=30',
+                duration: 3,
+                repeat: -1,
+                yoyo: true,
+                ease: 'power1.inOut',
+                stagger: 0.5
+            });
+        }
+        
+    // Enhanced feature card animations
+    gsap.utils.toArray('.feature-card-animated').forEach((card, i) => {
+        if (card && !card.dataset.gsapAnimated) {
+            card.dataset.gsapAnimated = 'true';
+            
+            // Stagger entrance animation
+            gsap.from(card, {
+                opacity: 0,
+                y: 50,
+                scale: 0.9,
+                rotation: -5,
+                duration: 0.8,
+                ease: 'back.out(1.7)',
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                },
+                delay: i * 0.1
+            });
+            
+            // Add hover animation - but don't override CSS
+            card.addEventListener('mouseenter', function() {
+                // Let CSS handle the hover, just ensure visibility
+                this.style.opacity = '1';
+                this.style.visibility = 'visible';
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                // Reset z-index but keep visible
+                this.style.zIndex = '1';
+            });
+        }
+    });
+    
+    // Fade in other cards on scroll
+    gsap.utils.toArray('.testimonial-card, .team-card').forEach((card, i) => {
+        if (card && !card.dataset.gsapAnimated) {
+            card.dataset.gsapAnimated = 'true';
+            gsap.from(card, {
+                opacity: 0,
+                y: 30,
+                duration: 0.6,
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                },
+                delay: (i % 3) * 0.1
+            });
+        }
+    });
+    } catch (e) {
+        console.error('GSAP animation error:', e);
+    }
+}
+
+// ============================================
+// Particle Effect
+// ============================================
+
+function initializeParticles() {
+    const canvas = document.getElementById('particleCanvas');
+    if (!canvas) return;
+    
+    try {
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        resizeCanvas();
+        
+        const particles = [];
+        const particleCount = 30;
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                this.opacity = Math.random() * 0.3 + 0.1;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            
+            draw() {
+                ctx.fillStyle = `rgba(52, 211, 153, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        let animationId;
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        const resizeHandler = () => {
+            resizeCanvas();
+            // Recreate particles on resize
+            particles.length = 0;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        };
+        
+        window.addEventListener('resize', resizeHandler);
+    } catch (e) {
+        console.error('Particle animation error:', e);
+    }
+}
 

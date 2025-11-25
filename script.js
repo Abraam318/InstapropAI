@@ -405,7 +405,7 @@ document.addEventListener('keydown', (e) => {
 // Console Welcome Message
 // ============================================
 
-console.log('%cInstaprop AI', 'font-size: 24px; font-weight: bold; color: #2563eb;');
+console.log('%cInstaprop AI', 'font-size: 24px; font-weight: bold; color: #3a6ad6;');
 console.log('%cInstant. Intelligent. Transparent.', 'font-size: 14px; color: #6b7280;');
 console.log('%cBuilding the future of real estate.', 'font-size: 12px; color: #9ca3af;');
 
